@@ -74,6 +74,8 @@ const convertMsToHM = (milliseconds) => {
 const onTimer = () => {
   clickCounter += 1;
   startAndStopBtn.innerText = "Stop";
+  startAndStopBtn.style.color = "red";
+  startAndStopBtn.style.backgroundColor = "pink";
   lapAndResetBtn.innerText = "Lap";
   lapAndResetBtn.disabled = false;
   const onTimer = setInterval(() => {
@@ -90,6 +92,8 @@ const onTimer = () => {
     if (clickCounter % 2 === 0) {
       clearInterval(onTimer);
       startAndStopBtn.innerText = "Start";
+      startAndStopBtn.style.color = "white";
+      startAndStopBtn.style.backgroundColor = "green";
       lapAndResetBtn.innerText = "Reset";
     }
     milliseconds += 1;
