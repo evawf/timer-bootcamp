@@ -33,6 +33,7 @@ lapAndResetBtn.className = "btn";
 lapAndResetBtn.innerText = "Lap";
 lapAndResetBtn.disabled = true;
 
+// Main Container div
 const containerDiv = document.createElement("div");
 containerDiv.className = "container";
 
@@ -85,10 +86,6 @@ const onTimer = () => {
     )}`;
     lapsInfoDiv.prepend(currentLapDiv);
 
-    // lapsInfoDiv.innerText = `Lap${lapCounter + 1}: ${convertMsToHM(
-    //   milliseconds_lap
-    // )}`;
-
     if (clickCounter % 2 === 0) {
       clearInterval(onTimer);
       startAndStopBtn.innerText = "Start";
@@ -110,9 +107,7 @@ const displayLapsInfo = (laps) => {
   return displayLaps;
 };
 
-// Timer Event Listener
-startAndStopBtn.addEventListener("click", onTimer);
-lapAndResetBtn.addEventListener("click", () => {
+const generateLaps = () => {
   if (lapAndResetBtn.innerText === "Lap") {
     milliseconds_lap = 0;
     lapCounter += 1;
@@ -123,7 +118,6 @@ lapAndResetBtn.addEventListener("click", () => {
       time: lapTime,
     };
     lapsData.push(lapData);
-    console.log(lapsData);
     lapsData.sort((a, b) => (a.lap > b.lap ? 1 : -1));
     lapRecord.innerHTML = displayLapsInfo(lapsData.reverse());
     lapsInfoDiv.prepend(lapRecord);
@@ -132,4 +126,8 @@ lapAndResetBtn.addEventListener("click", () => {
   if (lapAndResetBtn.innerText === "Reset") {
     init();
   }
-});
+};
+
+// Timer Event Listener
+startAndStopBtn.addEventListener("click", onTimer);
+lapAndResetBtn.addEventListener("click", generateLaps);
