@@ -4,13 +4,25 @@ let clickCounter = 0;
 let milliseconds = 0;
 let milliseconds_lap = 0;
 const delayInMilliseconds = 1;
+let temp = 0;
 
+// Div content to show Total time passed
 const elapsedTime = document.createElement("div");
 elapsedTime.className = "display";
 elapsedTime.innerText = "Timer";
 
+// Lap container
 const lapsInfoDiv = document.createElement("div");
-lapsInfoDiv.className = "lapsInfo";
+lapsInfoDiv.className = "lapsContainer";
+
+// Div to show Current on-going lap
+const currentLapDiv = document.createElement("div");
+currentLapDiv.className = "currentLap";
+currentLapDiv.classList.add = "lap";
+
+// Div to show Previous lap
+const lapRecord = document.createElement("div");
+lapRecord.className = "lap";
 
 // Add buttons
 const startAndStopBtn = document.createElement("button");
@@ -35,6 +47,7 @@ const init = () => {
   milliseconds_lap = 0;
   temp = 0;
   lapRecord.innerHTML = "";
+  currentLapDiv.innerText = "";
   displayLapsInfo.innerText = "";
   lapsInfoDiv.innerText = "";
   lapAndResetBtn.disabled = true;
@@ -65,9 +78,14 @@ const onTimer = () => {
   lapAndResetBtn.disabled = false;
   const onTimer = setInterval(() => {
     elapsedTime.innerText = convertMsToHM(milliseconds);
-    lapsInfoDiv.innerText = `Lap${lapCounter + 1}: ${convertMsToHM(
+    currentLapDiv.innerText = `Lap${lapCounter + 1}: ${convertMsToHM(
       milliseconds_lap
     )}`;
+    lapsInfoDiv.prepend(currentLapDiv);
+
+    // lapsInfoDiv.innerText = `Lap${lapCounter + 1}: ${convertMsToHM(
+    //   milliseconds_lap
+    // )}`;
 
     if (clickCounter % 2 === 0) {
       clearInterval(onTimer);
@@ -88,8 +106,7 @@ const displayLapsInfo = (laps) => {
   return displayLaps;
 };
 
-let temp = 0;
-const lapRecord = document.createElement("div");
+// Timer Event Listener
 startAndStopBtn.addEventListener("click", onTimer);
 lapAndResetBtn.addEventListener("click", () => {
   if (lapAndResetBtn.innerText === "Lap") {
@@ -102,11 +119,13 @@ lapAndResetBtn.addEventListener("click", () => {
       time: lapTime,
     };
     lapsData.push(lapData);
-    lapRecord.innerHTML = displayLapsInfo(lapsData);
+    lapRecord.innerHTML = displayLapsInfo(lapsData.reverse());
+    lapsInfoDiv.prepend(lapRecord);
   }
 
   if (lapAndResetBtn.innerText === "Reset") {
     init();
   }
 });
-document.body.appendChild(lapRecord);
+
+// document.body.appendChild(lapRecord);
