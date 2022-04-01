@@ -123,6 +123,8 @@ lapAndResetBtn.addEventListener("click", () => {
       time: lapTime,
     };
     lapsData.push(lapData);
+    console.log(lapsData);
+    lapsData.sort((a, b) => (a.lap > b.lap ? 1 : -1));
     lapRecord.innerHTML = displayLapsInfo(lapsData.reverse());
     lapsInfoDiv.prepend(lapRecord);
   }
@@ -131,5 +133,3 @@ lapAndResetBtn.addEventListener("click", () => {
     init();
   }
 });
-
-// document.body.appendChild(lapRecord);
