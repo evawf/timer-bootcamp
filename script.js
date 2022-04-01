@@ -1,9 +1,17 @@
+let lapCounter = 0;
+const lapsData = [];
+let clickCounter = 0;
+let milliseconds = 0;
+let milliseconds_lap = 0;
+const delayInMilliseconds = 1;
+
 const elapsedTime = document.createElement("div");
 elapsedTime.className = "display";
-elapsedTime.innerHTML = "Timer";
+elapsedTime.innerText = "Timer";
 
 const lapsInfoDiv = document.createElement("div");
 lapsInfoDiv.className = "lapsInfo";
+
 // Add buttons
 const startAndStopBtn = document.createElement("button");
 startAndStopBtn.className = "btn";
@@ -19,11 +27,19 @@ containerDiv.className = "container";
 containerDiv.append(elapsedTime, startAndStopBtn, lapAndResetBtn);
 document.body.append(containerDiv, lapsInfoDiv);
 
-let lapCounter = 0;
-const lapsData = [];
-let clickCounter = 0;
-let milliseconds = 0;
-const delayInMilliseconds = 1;
+const init = () => {
+  lapCounter = 0;
+  lapsData.length = 0;
+  clickCounter = 0;
+  milliseconds = 0;
+  milliseconds_lap = 0;
+  temp = 0;
+  lapRecord.innerHTML = "";
+  displayLapsInfo.innerText = "";
+  lapsInfoDiv.innerText = "";
+  lapAndResetBtn.disabled = true;
+  elapsedTime.innerText = "Timer";
+};
 
 function padTo2Digits(num) {
   return num.toString().padStart(2, "0");
@@ -37,7 +53,6 @@ const convertMsToHM = (milliseconds) => {
   seconds = seconds % 60;
   minutes = seconds >= 30 ? minutes : minutes;
   minutes = minutes % 60;
-
   return `${padTo2Digits(minutes)}:${padTo2Digits(seconds)}:${padTo2Digits(
     ms
   )}`;
@@ -46,39 +61,52 @@ const convertMsToHM = (milliseconds) => {
 const onTimer = () => {
   clickCounter += 1;
   startAndStopBtn.innerText = "Stop";
+  lapAndResetBtn.innerText = "Lap";
   lapAndResetBtn.disabled = false;
-
   const onTimer = setInterval(() => {
-    elapsedTime.innerHTML = convertMsToHM(milliseconds);
+    elapsedTime.innerText = convertMsToHM(milliseconds);
+    lapsInfoDiv.innerText = `Lap${lapCounter + 1}: ${convertMsToHM(
+      milliseconds_lap
+    )}`;
+
     if (clickCounter % 2 === 0) {
       clearInterval(onTimer);
       startAndStopBtn.innerText = "Start";
+      lapAndResetBtn.innerText = "Reset";
     }
     milliseconds += 1;
+    milliseconds_lap += 1;
   }, delayInMilliseconds);
-  console.log(milliseconds);
   return milliseconds;
 };
 
 const displayLapsInfo = (laps) => {
-  console.log(laps);
   let displayLaps = "";
-  for (let i = 0; i < laps.length; i += 1) {
-    displayLaps += `Lap ${laps[i].lap}:  ${convertMsToHM(laps[i].time)}<br>`;
+  for (let i = 0; i < laps.length; i++) {
+    displayLaps += `Lap${laps[i].lap}:  ${convertMsToHM(laps[i].time)}<br>`;
   }
   return displayLaps;
 };
 
+let temp = 0;
+const lapRecord = document.createElement("div");
 startAndStopBtn.addEventListener("click", onTimer);
 lapAndResetBtn.addEventListener("click", () => {
-  lapCounter += 1;
-  console.log(milliseconds);
+  if (lapAndResetBtn.innerText === "Lap") {
+    milliseconds_lap = 0;
+    lapCounter += 1;
+    lapTime = milliseconds - temp;
+    temp = milliseconds;
+    let lapData = {
+      lap: lapCounter,
+      time: lapTime,
+    };
+    lapsData.push(lapData);
+    lapRecord.innerHTML = displayLapsInfo(lapsData);
+  }
 
-  let lapTime = onTimer();
-  let lapData = {
-    lap: lapCounter,
-    time: lapTime,
-  };
-  lapsData.push(lapData);
-  lapsInfoDiv.innerHTML = displayLapsInfo(lapsData);
+  if (lapAndResetBtn.innerText === "Reset") {
+    init();
+  }
 });
+document.body.appendChild(lapRecord);
