@@ -3,7 +3,7 @@ const lapsData = [];
 let clickCounter = 0;
 let milliseconds = 0;
 let milliseconds_lap = 0;
-const delayInMilliseconds = 1;
+const delayInMilliseconds = 0;
 let temp = 0;
 
 // Div content to show Total time passed
@@ -94,9 +94,10 @@ const onTimer = () => {
       lapAndResetBtn.innerText = "Reset";
     }
     milliseconds += 1;
+    console.log(milliseconds);
     milliseconds_lap += 1;
   }, delayInMilliseconds);
-  return milliseconds;
+  // return milliseconds;
 };
 
 const displayLapsInfo = (laps) => {
