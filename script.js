@@ -43,6 +43,10 @@ let mode = "start";
 let lapMode = "lap";
 const lapsData = [];
 let lapData;
+let tempSeconds = 0;
+let tempMinutes = 0;
+let tempHours = 0;
+let lapCounter = 0;
 
 // toggle buttons
 const toggleBtn = () => {
@@ -115,11 +119,6 @@ startAndStopBtn.addEventListener("click", () => {
   mode = toggleMode(mode);
 });
 
-let tempSeconds = 0;
-let tempMinutes = 0;
-let tempHours = 0;
-let lapCounter = 0;
-
 // Collect laps data and Display
 const displayLapsInfo = (laps) => {
   console.log(laps);
@@ -153,7 +152,26 @@ const generateLaps = () => {
   }
 
   if (lapMode === "reset") {
+    lapAndResetBtn.disabled = true;
     console.log("you clicked reset");
+    milliseconds = 0;
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    setTimer;
+    mode = "start";
+    lapMode = "lap";
+    lapsData.length = 0;
+    lapData;
+    tempSeconds = 0;
+    tempMinutes = 0;
+    tempHours = 0;
+    lapCounter = 0;
+    elapsedTime.innerText = "Timer";
+    lapRecord.innerHTML = "";
+    currentLapDiv.innerText = "";
+    displayLapsInfo.innerText = "";
+    lapsInfoDiv.innerText = "";
   }
 };
 
