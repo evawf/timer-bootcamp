@@ -83,23 +83,30 @@ const onTimer = () => {
 // Display laps
 const generateLaps = () => {};
 
+const toggleMode = (mode) => {
+  mode === "start" ? (mode = "stop") : (mode = "start");
+  return mode;
+};
+
 // Timer Event Listener
 startAndStopBtn.addEventListener("click", () => {
+  console.log(mode);
+  if (mode === "start") {
+    onTimer();
+    startAndStopBtn.innerText = "Stop";
+    startAndStopBtn.style = "background-color: pink";
+  }
+
   if (mode === "stop") {
     console.log("you clicked stop btn");
     console.log(setTimer);
     clearInterval(setTimer);
-    mode = "start";
     startAndStopBtn.innerText = "Start";
     startAndStopBtn.style = "background-color: green";
+    console.log(seconds);
   }
-  if (mode === "start") {
-    onTimer();
-    mode = "stop";
-    startAndStopBtn.innerText = "Stop";
-    startAndStopBtn.style = "background-color: pink";
-  }
+  mode = toggleMode(mode);
 });
-console.log(mode);
+// console.log(mode);
 
 lapAndResetBtn.addEventListener("click", generateLaps);
