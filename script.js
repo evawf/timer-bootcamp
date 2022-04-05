@@ -24,6 +24,7 @@ let lapAndResetBtn = document.createElement("button");
 lapAndResetBtn.className = "btn";
 lapAndResetBtn.innerText = "Lap";
 lapAndResetBtn.disabled = true;
+lapAndResetBtn.style = "background-color: gray";
 
 // Main Container div
 const containerDiv = document.createElement("div");
@@ -39,6 +40,9 @@ let hours = 0;
 const delayMilliseconds = 1000;
 let setTimer;
 let mode = "start";
+let lapMode = "lap";
+const lapsData = [];
+let lapData;
 
 // toggle buttons
 const toggleBtn = () => {
@@ -80,12 +84,11 @@ const onTimer = () => {
   // return milliseconds;
 };
 
-// Display laps
-const generateLaps = () => {};
-
 const toggleMode = (mode) => {
-  mode === "start" ? (mode = "stop") : (mode = "start");
-  return mode;
+  if (mode === "start") return (mode = "stop");
+  if (mode === "stop") return (mode = "start");
+  if (mode === "lap") return (mode = "reset");
+  if (mode === "reset") return (mode = "lap");
 };
 
 // Timer Event Listener
@@ -95,6 +98,8 @@ startAndStopBtn.addEventListener("click", () => {
     onTimer();
     startAndStopBtn.innerText = "Stop";
     startAndStopBtn.style = "background-color: pink";
+    lapAndResetBtn.disabled = false;
+    lapAndResetBtn.style = "background-color: green";
   }
 
   if (mode === "stop") {
@@ -102,11 +107,54 @@ startAndStopBtn.addEventListener("click", () => {
     console.log(setTimer);
     clearInterval(setTimer);
     startAndStopBtn.innerText = "Start";
+    lapAndResetBtn.innerText = "Reset";
+    lapMode = toggleMode(lapMode);
     startAndStopBtn.style = "background-color: green";
     console.log(seconds);
   }
   mode = toggleMode(mode);
 });
-// console.log(mode);
+
+let tempSeconds = 0;
+let tempMinutes = 0;
+let tempHours = 0;
+let lapCounter = 0;
+
+// Collect laps data and Display
+const displayLapsInfo = (laps) => {
+  console.log(laps);
+  let displayLaps = "";
+  for (let i = 0; i < laps.length; i++) {
+    displayLaps += `Lap${laps[i].lap}: ${laps[i].lapTime}<br>`;
+  }
+  return displayLaps;
+};
+
+const generateLaps = () => {
+  // console.log(seconds);
+  if (lapMode === "lap") {
+    let lapSeconds = seconds - tempSeconds;
+    tempSeconds = seconds;
+    let lapMinutes = minutes - tempMinutes;
+    tempMinutes = minutes;
+    let lapHours = hours - tempHours;
+    tempHours = hours;
+    lapCounter += 1;
+    lapData = {
+      lap: lapCounter,
+      lapTime: `${displayTwoDigits(lapHours)}:${displayTwoDigits(
+        lapMinutes
+      )}:${displayTwoDigits(lapSeconds)}`,
+    };
+    lapsData.push(lapData);
+    lapsData.sort((a, b) => (a.lap > b.lap ? 1 : -1));
+    lapRecord.innerHTML = displayLapsInfo(lapsData.reverse());
+    lapsInfoDiv.prepend(lapRecord);
+  }
+
+  if (lapMode === "reset") {
+    console.log("you clicked reset");
+  }
+};
 
 lapAndResetBtn.addEventListener("click", generateLaps);
