@@ -36,21 +36,48 @@ let milliseconds = 0;
 let seconds = 0;
 let minutes = 0;
 let hours = 0;
-const delayMilliseconds = 1;
+const delayMilliseconds = 0;
+let setTimer;
 
+// toggle buttons
+const toggleBtn = () => {
+  startAndStopBtn.innerText === "Start"
+    ? (startAndStopBtn.innerText = "Stop")
+    : (startAndStopBtn.innerText = "Start");
+  lapAndResetBtn.innerText === "Lap"
+    ? (lapAndResetBtn.innerText = "Reset")
+    : (lapAndResetBtn.innerText = "Lap");
+};
+
+// Display elpased time
 const onTimer = () => {
-  const timerId = setInterval(() => {
-    milliseconds += 1;
+  const startTimer = () => {
     console.log(milliseconds);
-    if (milliseconds >= 300) {
-      clearInterval(timerId);
+    if (milliseconds >= 1000) {
+      seconds += 1;
+      milliseconds = 0;
     }
-  }, delayMilliseconds);
+    if (seconds >= 60) {
+      minutes += 1;
+      seconds = 0;
+    }
+    if (minutes >= 60) {
+      hours += 1;
+      minutes = 0;
+    }
+
+    elapsedTime.innerText = seconds;
+    milliseconds += 1;
+    return milliseconds;
+  };
+  setTimer = setInterval(startTimer, delayMilliseconds);
+  console.log(milliseconds);
   return milliseconds;
 };
 
 console.log(milliseconds);
 
+// Display laps
 const generateLaps = () => {};
 
 // Timer Event Listener
