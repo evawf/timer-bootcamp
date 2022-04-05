@@ -36,8 +36,9 @@ let milliseconds = 0;
 let seconds = 0;
 let minutes = 0;
 let hours = 0;
-const delayMilliseconds = 0;
+const delayMilliseconds = 1000;
 let setTimer;
+let mode = "start";
 
 // toggle buttons
 const toggleBtn = () => {
@@ -49,14 +50,18 @@ const toggleBtn = () => {
     : (lapAndResetBtn.innerText = "Lap");
 };
 
+const displayTwoDigits = (num) => {
+  if (num >= 100)
+    return Math.floor(num / 10)
+      .toString()
+      .padStart(2, "0");
+  return num.toString().padStart(2, "0");
+};
+
 // Display elpased time
 const onTimer = () => {
   const startTimer = () => {
-    console.log(milliseconds);
-    if (milliseconds >= 1000) {
-      seconds += 1;
-      milliseconds = 0;
-    }
+    seconds += 1;
     if (seconds >= 60) {
       minutes += 1;
       seconds = 0;
@@ -65,21 +70,36 @@ const onTimer = () => {
       hours += 1;
       minutes = 0;
     }
-
-    elapsedTime.innerText = seconds;
+    elapsedTime.innerText = `${displayTwoDigits(hours)}:${displayTwoDigits(
+      minutes
+    )}:${displayTwoDigits(seconds)}`;
     milliseconds += 1;
-    return milliseconds;
+    // return milliseconds;
   };
   setTimer = setInterval(startTimer, delayMilliseconds);
-  console.log(milliseconds);
-  return milliseconds;
+  // return milliseconds;
 };
-
-console.log(milliseconds);
 
 // Display laps
 const generateLaps = () => {};
 
 // Timer Event Listener
-startAndStopBtn.addEventListener("click", onTimer);
+startAndStopBtn.addEventListener("click", () => {
+  if (mode === "stop") {
+    console.log("you clicked stop btn");
+    console.log(setTimer);
+    clearInterval(setTimer);
+    mode = "start";
+    startAndStopBtn.innerText = "Start";
+    startAndStopBtn.style = "background-color: green";
+  }
+  if (mode === "start") {
+    onTimer();
+    mode = "stop";
+    startAndStopBtn.innerText = "Stop";
+    startAndStopBtn.style = "background-color: pink";
+  }
+});
+console.log(mode);
+
 lapAndResetBtn.addEventListener("click", generateLaps);
